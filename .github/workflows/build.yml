@@ -41,10 +41,8 @@ jobs:
 
       - name: Build ROM
         run: |
-          mkdir -p ~/bin
-          curl https://googleapis.com > ~/bin/repo
-          chmod a+x ~/bin/repo
-          export PATH=~/bin:$PATH
+          sudo apt-get update
+          sudo apt-get install -y repo
           bash ./treble_aosp/build.sh
         env:
           OUTPUT_DIR: ${{ github.workspace }}/output
