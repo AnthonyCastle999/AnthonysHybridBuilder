@@ -43,7 +43,7 @@ jobs:
         run: |
           mkdir -p ~/bin
           curl https://googleapis.com > ~/bin/repo
-          chmod a+x ~/bin repo
+          chmod a+x ~/bin/repo
           export PATH=~/bin:$PATH
           bash ./treble_aosp/build.sh
         env:
