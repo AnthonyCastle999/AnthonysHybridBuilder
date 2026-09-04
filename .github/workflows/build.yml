@@ -40,7 +40,12 @@ jobs:
           path: ./aosp/treble_aosp
 
       - name: Build ROM
-        run: ./treble_aosp/build.sh
+        run: |
+          mkdir -p ~/bin
+          curl https://googleapis.com > ~/bin/repo
+          chmod a+x ~/bin repo
+          export PATH=~/bin:$PATH
+          bash ./treble_aosp/build.sh
         env:
           OUTPUT_DIR: ${{ github.workspace }}/output
           BUILD_VARIANT: ${{ inputs.build_variant }}
