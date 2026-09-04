@@ -2,9 +2,9 @@
 
 echo
 echo "--------------------------------------"
-echo "          AOSP 16.0 Buildbot          "
+echo "        LineageHYBRID Buildbot        "
 echo "                  by                  "
-echo "                ponces                "
+echo "     ponces and modded by Anthony     "
 echo "--------------------------------------"
 echo
 
@@ -18,7 +18,9 @@ export BUILD_NUMBER="$(date +%y%m%d)"
 
 initRepos() {
     echo "--> Initializing workspace"
-    repo init -u https://android.googlesource.com/platform/manifest -b android-16.0.0_r2 --git-lfs
+    repo init -u https://android.googlesource.com -b android-17.0.0_r1 --git-lfs
+    echo "--> Blobby time!"
+    git clone https://github.com -b lineage-23.2 hardware/lineage
     echo
 
     echo "--> Preparing local manifest"
@@ -26,6 +28,10 @@ initRepos() {
     cp $BUILD_ROOT/build/default.xml .repo/local_manifests/default.xml
     cp $BUILD_ROOT/build/remove.xml .repo/local_manifests/remove.xml
     echo
+
+    echo "--> Blobby Installing..."
+    echo 'PRODUCT_PACKAGES += org.lineageos.hardware' >> build/make/target/product/gsi_release.mk
+    echo '$(call inherit-product, hardware/lineage/config/common.mk)' >> build/make/target/product/gsi_release.mk
 }
 
 syncRepos() {
@@ -36,15 +42,15 @@ syncRepos() {
 
 applyPatches() {
     echo "--> Applying TrebleDroid patches"
-    bash $BUILD_ROOT/patch.sh $BUILD_ROOT trebledroid
+#    bash $BUILD_ROOT/patch.sh $BUILD_ROOT trebledroid
     echo
 
     echo "--> Applying personal patches"
-    bash $BUILD_ROOT/patch.sh $BUILD_ROOT personal
+#bash $BUILD_ROOT/patch.sh $BUILD_ROOT personal
     echo
 
     echo "--> Applying staging patches"
-    bash $BUILD_ROOT/patch.sh $BUILD_ROOT staging
+#    bash $BUILD_ROOT/patch.sh $BUILD_ROOT staging
     echo
 
     echo "--> Generating makefiles"
@@ -74,7 +80,7 @@ buildTrebleApp() {
 
 buildVariant() {
     echo "--> Building $1"
-    lunch "$1"-bp2a-userdebug
+    lunch aosp_arm64-userdebug
     make -j$(nproc --ignore=2) installclean
     make -j$(nproc --ignore=2) systemimage
     make -j$(nproc --ignore=2) target-files-package otatools
@@ -95,7 +101,7 @@ generatePackages() {
     find $OUTPUT_DIR/ -name "system-treble_*.img" | while read file; do
         filename="$(basename $file)"
         [[ "$filename" == *"_bvN"* ]] && variant="vanilla" || variant="gapps"
-        name="aosp-arm64-ab-${variant}-16.0-$buildDate"
+        name="lineageHYBRID-23.5-${variant}--$buildDate"
         xz -cv "$file" -T0 > $OUTPUT_DIR/"$name".img.xz
     done
     rm -rf $OUTPUT_DIR/system-*.img
@@ -108,7 +114,7 @@ generateOta() {
     buildDate="$(date +%Y%m%d)"
     timestamp="$START"
     json="{\"version\": \"$version\",\"date\": \"$timestamp\",\"variants\": ["
-    find $OUTPUT_DIR/ -name "aosp-*-16.0-$buildDate.img.xz" | sort | {
+    find $OUTPUT_DIR/ -name "lineageHYBRID-23.5-*-$buildDate.img.xz" | sort | {
         while read file; do
             filename="$(basename $file)"
             [[ "$filename" == *"-vanilla"* ]] && variant="v" || variant="g"
