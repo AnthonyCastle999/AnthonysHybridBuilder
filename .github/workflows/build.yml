@@ -28,11 +28,11 @@ jobs:
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           tool-cache: true
-           android: true
-           dotnet: true
-           large-packages: true
-           docker-images: true
-           swap-storage: true
+          android: true
+          dotnet: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
         
       - name: Setup Environment
         run: |
