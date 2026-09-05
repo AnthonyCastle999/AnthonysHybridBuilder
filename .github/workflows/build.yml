@@ -23,7 +23,17 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-
+      
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+           android: true
+           dotnet: true
+           large-packages: true
+           docker-images: true
+           swap-storage: true
+        
       - name: Setup Environment
         run: |
           mkdir -p ~/.ssh
