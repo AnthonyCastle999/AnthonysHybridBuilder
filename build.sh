@@ -26,16 +26,16 @@ initRepos() {
     cp $BUILD_ROOT/build/default.xml .repo/local_manifests/default.xml
     cp $BUILD_ROOT/build/remove.xml .repo/local_manifests/remove.xml
     echo
-
-    echo "--> Blobby Installing..."
-    echo 'PRODUCT_PACKAGES += org.lineageos.hardware' >> build/make/target/product/gsi_release.mk
-    echo '$(call inherit-product, hardware/lineage/config/common.mk)' >> build/make/target/product/gsi_release.mk
 }
 
 syncRepos() {
     echo "--> Syncing repos"
     repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --ignore=2) || repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --ignore=2)
     echo
+
+    echo "--> Blobby Installing..."
+    echo 'PRODUCT_PACKAGES += org.lineageos.hardware' >> build/make/target/product/gsi_release.mk
+    echo '$(call inherit-product, hardware/lineage/config/common.mk)' >> build/make/target/product/gsi_release.mk
 }
 
 applyPatches() {
