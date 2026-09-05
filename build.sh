@@ -18,7 +18,7 @@ export BUILD_NUMBER="$(date +%y%m%d)"
 
 initRepos() {
     echo "--> Initializing workspace"
-    repo init -u https://android.googlesource.com /platform/manifest -b android-17.0.0_r1 --git-lfs
+    repo init -u https://android.googlesource.com/platform/manifest -b android-17.0.0_r1 --git-lfs
     echo "--> Blobby time!"
     git clone https://github.com -b lineage-23.2 hardware/lineage
     echo
